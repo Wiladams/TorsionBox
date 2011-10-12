@@ -44,15 +44,49 @@ module lockpanel(thickness, length, height)
 
 module torsionbox()
 {
-	lockpanel(thickness=gapsize, length = panellength, height=panelheight);
+	cthick = 3;
+	capcolor = [0,1,1];
 
-	rotate([180, 0, 90])
-	lockpanel(thickness=gapsize, length = panellength, height=panelheight);
+	poses =	[
+		[[0,0,0],[0,0,0]],
+		[[0, (panellength/2)-12, 0],[0,0,0]],
+		[[0, -(panellength/2)+12+gapsize, 0],[0,0,0]],
+		[[0,0,0],[180, 0, 90]],
+		[[(panellength/2)-12, 0, 0],[180, 0, 90]],
+		[[-(panellength/2)+12+gapsize, 0, 0],[180, 0, 90]],
+	];
+
+	for (pos = poses)
+	{
+		translate(pos[0])
+		rotate(pos[1])
+		lockpanel(thickness=gapsize, length = panellength, height=panelheight);
+	}
+
+	caposes = [
+		[[0,0,panelheight/2],[180, 0,0]],
+		[[0,(panellength/2)-12,panelheight/2],[180, 0,0]],
+		[[0,-(panellength/2)+12+gapsize,panelheight/2],[180, 0,0]],
+
+		[[(panellength/2)-12,0,panelheight/2],[180, 0,0]],
+		[[(panellength/2)-12,(panellength/2)-12,panelheight/2],[180, 0,0]],
+		[[(panellength/2)-12,-(panellength/2)+12+gapsize,panelheight/2],[180, 0,0]],
+
+		[[-(panellength/2)+12+gapsize,0,panelheight/2],[180, 0,0]],
+		[[-(panellength/2)+12+gapsize,(panellength/2)-12,panelheight/2],[180, 0,0]],
+		[[-(panellength/2)+12+gapsize,-(panellength/2)+12+gapsize,panelheight/2],[180, 0,0]],
+
+	];
 
 	// Place a cap over the joint
-	color([0,1,1])
-	translate([0,0,panelheight/2])
-	rotate([180, 0,0])
-	connector(length=16, thickness=3,height=12,gap=gapsize, corners=4, hole=true); 
-
+	for (capos = caposes)
+	{
+		color(capcolor)
+		translate(capos[0])
+		rotate(capos[1])
+		connector(length=16, thickness=cthick,height=12,gap=gapsize, 
+			corners=4, 
+			hole=true,
+			style=CIRCULAR); 
+	}
 }
